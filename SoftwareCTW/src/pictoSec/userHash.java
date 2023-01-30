@@ -15,7 +15,7 @@ public class userHash {
 	
 	public user createUser(String idText, String passText, user u) throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
 		SecureRandom random = new SecureRandom();
-		//creating the salt and hash for the user id
+		//creating the salt and hash for the username
 		byte[] salt1 = new byte[64];
 		u.usernameSalt = salt1;
 		random.nextBytes(salt1);
@@ -39,7 +39,9 @@ public class userHash {
 		return str;
 	}
 	
-	//both of these functions pull data from the dummy main class, but eventually will pull from the database
+	/*both of these functions pull data from the dummy main class, but eventually will pull from the database.
+	 * likely, they will also return a value so we can re-prompt if the user enters information incorrectly,
+	 * but for now, it is void*/
 	
 	//function to verify the username
 	public static void verifyUsername(String username, byte[] IDsalt, user t) throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
