@@ -13,21 +13,15 @@ public class userHash {
 	public userHash() {
 	}
 	
-	public user createUser(String idText, String passText, user u) throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
+	public static user createUser(String idText, String passText, user u) throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
+		u.username = idText;
 		SecureRandom random = new SecureRandom();
-		//creating the salt and hash for the username
-		byte[] salt1 = new byte[64];
-		u.usernameSalt = salt1;
-		random.nextBytes(salt1);
-		String str = createHash(idText, salt1);
-		u.usernameHash =  str;
-		
 		//creating a separate salt for the password and a new hash
-		byte[] salt2 = new byte[64];
-		u.passSalt = salt2;
-		random.nextBytes(salt2);
-		String str2 = createHash(passText, salt2);
-		u.passHash =  str2;
+		byte[] salt = new byte[64];
+		u.passSalt = salt;
+		random.nextBytes(salt);
+		String str = createHash(passText, salt);
+		u.passHash =  str;
 		return u;
 	}
 	//creates the hash text to be stored (into database eventually)
@@ -44,21 +38,42 @@ public class userHash {
 	 * but for now, it is void*/
 	
 	//function to verify the username
-	public static void verifyUsername(String username, byte[] IDsalt, user t) throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
-		String str1 = createHash(username, IDsalt);
-		if(str1.compareTo(t.usernameHash) == 0) {
+	private static boolean verifyUsername(String username, user t) throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
+		//dummy line to prevent error, this will actually be a check if the username entered is a valid entry in the hashmap
+		String str1 = username;
+		if(str1.compareTo(t.username) == 0) {
 			System.out.println("Verified user ID");
+			return true;
 		}else {
 			System.out.println("Could not verify user ID");
+			return false;
 		}
 	}
 	//function to verify the user password
-		public static void verifyPassword(String password, byte[] passSalt, user t) throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
-			String str1 = createHash(password, passSalt);
-			if(str1.compareTo(t.passHash) == 0) {
-				System.out.println("Verified user password");
-			}else {
-				System.out.println("Could not verify user password");
-			}
+	private static boolean verifyPassword(String password, byte[] passSalt, user t) throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
+		String str1 = createHash(password, passSalt);
+		if(str1.compareTo(t.passHash) == 0) {
+			System.out.println("Verified user password");
+			return true;
+		}else {
+			System.out.println("Could not verify user password");
+			return false;
 		}
+	}
+	public static boolean verifyLogin(String username, String password, user t) throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
+		boolean check;
+		user u = t;
+		String str = username;
+		check = verifyUsername(str, u);
+		if(!check) {
+			return false;
+		}
+		check = verifyPassword(password, u.passSalt, u);
+		if(!check) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
 }

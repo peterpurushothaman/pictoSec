@@ -13,20 +13,13 @@ public class main {
 		String username = "johnSmith";
 		String password = "strongPassword";
 		user t = new user();
-		t.UID = 1111111111;
-		System.out.println("This is the username before hashed: " + username);
-		System.out.println("This is the password before hashed: " + password);
-		System.out.println("This is the user ID: " + t.UID + "\n");
-		userHash hash = new userHash();
-		t = hash.createUser(username, password, t);
-		System.out.println("This is the username after hashed: " + t.usernameHash);
-		System.out.println("This is the password after hashed: " + t.passHash + "\n");
-		/*here i use the username and password strings i created directly, but
-		 * it would be easy to create a login page and read them from the user
-		 * in the app.
-		 */
-		userHash.verifyUsername(username, t.usernameSalt, t);
-		userHash.verifyPassword(password, t.passSalt, t);
+		t = userHash.createUser(username, password, t);
+		boolean test = userHash.verifyLogin(username, password, t);
+		String foo;
+		for(int i  = 0; i < 10; i++) {
+			foo = scrambler.generatePassword(1, 9);
+			System.out.println("TestPassword: " + foo);
+		}
 	}
 
 }

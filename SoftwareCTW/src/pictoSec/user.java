@@ -4,8 +4,7 @@
 package pictoSec;
 
 public class user {
-	public String usernameHash;
-	public byte[] usernameSalt;
+	public String username;
 	public String passHash;
 	public byte[] passSalt;
 	public int UID;
