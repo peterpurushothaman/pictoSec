@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -45,18 +46,22 @@ public class SecondFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String foo;
-                for(int i  = 0; i < 11; i++) {
-                    foo = db.retrievePassword("ppurushothaman1");
-                    String text = "TestPassword: " + foo + "\n";
-                    binding.textview.append(text);
-                }
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        binding.textview.setText("");
+                if(db.passwords.size() == 0){
+                    Toast.makeText(getActivity(), "No passwords to display!", Toast.LENGTH_SHORT).show();
+                }else {
+                    for (int i = 0; i < db.passwords.size(); i++) {
+                        foo = db.retrievePassword("ppurushothaman1");
+                        String text = "TestPassword: " + foo + "\n";
+                        binding.textview.append(text);
                     }
-                }, 10*1000);
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            binding.textview.setText("");
+                        }
+                    }, 10*1000);
+                }
             }
         });
     }

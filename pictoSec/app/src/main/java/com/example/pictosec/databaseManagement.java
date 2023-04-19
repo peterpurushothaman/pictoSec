@@ -15,11 +15,11 @@ import java.util.*;
 
 public class databaseManagement {
 
-        private static FirebaseFirestore db;
+        public static FirebaseFirestore db;
         Task<QuerySnapshot> query;
         private static List<String> list;
         private static int i;
-        private static ArrayList<String> passwords;
+        public static ArrayList<String> passwords;
 
         public databaseManagement(){
                 i = 0;
@@ -44,25 +44,28 @@ public class databaseManagement {
                 DocumentSnapshot document = task.getResult();
                 passwords = (ArrayList<String>) document.get("passwords");
         }
-
-        public static int addPassword(String username, String str){
-                //add a new list if the user is new, ignore this implementation for now, this will change
-                //when i implement the login feature as the login will do this, this is simply to test
+        public static int register(String username, String password){
                 if(!list.contains(username)) {
                         List<String> passwords = new ArrayList<>();
                         Map<String, Object> data = new HashMap<>();
-                        data.put("username", username);
-                        data.put("passwords", passwords);
-                        db.collection("userPasswords")
-                                .document("ppurushothaman1").set(data);
+                        data.put("password", password);
+                        db.collection("users").document(username).set(data);
+                        return 1;
+                }else{
+                        return 0;
                 }
+        }
+        public static int addPassword(String username, String str){
                 db.collection("userPasswords")
                         .document("ppurushothaman1").update("passwords", FieldValue.arrayUnion(str));
                 return 1;
         }
         public static String retrievePassword(String username) {
+                if(passwords.size() == 0){
+                        return null;
+                }
                 String str;
-                if(i == 11){
+                if(i == passwords.size()){
                         i = 0;
                 }
                 str = passwords.get(i);

@@ -11,12 +11,16 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.pictosec.databinding.FragmentFirstBinding;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     TextView showPasswordView;
     databaseManagement db;
+
+    passObj pass;
+    scrambler scramble;
 
     @Override
     public View onCreateView(
@@ -25,6 +29,7 @@ public class FirstFragment extends Fragment {
     ) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         db = new databaseManagement();
+        scramble = new scrambler();
         return binding.getRoot();
 
     }
@@ -42,14 +47,13 @@ public class FirstFragment extends Fragment {
         view.findViewById(R.id.generate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String foo;
+                int[] arr;
                 binding.textview1.setText("");
-                for(int i  = 0; i < 10; i++) {
-                    foo = scrambler.generatePassword(1, 9);
-                    //db.addPassword("ppurushothaman1", foo);
-                    String text = "TestPassword: " + foo + "\n";
-                    binding.textview1.append(text);
-                }
+                    pass = scramble.generatePassword(1, 0,9);
+                    arr = pass.imageSet;
+                    db.addPassword("ppurushothaman1", pass.password);
+                    scrambler.generateImage(arr, FirstFragment.this.getView(), FirstFragment.this.getContext());
+                    binding.textview1.append(pass.password);
             }
         });
     }

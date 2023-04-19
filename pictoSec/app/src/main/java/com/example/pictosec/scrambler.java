@@ -1,5 +1,10 @@
 package com.example.pictosec;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.widget.ImageView;
+
 import java.lang.*;
 import java.util.*;
 
@@ -15,18 +20,27 @@ public class scrambler {
     private static int passLength = 0;
     private static char[] set;
 
+    public static String imageSet;
+
+
     public scrambler() {
     }
 
-    public static String generatePassword(int setChoice, int length) {
+    public static passObj generatePassword(int setChoice, int imageChoice, int length) {
         Random rand = new Random();
         int num;
         int index;
         char c;
+        int[] arr = new int[length];
         if(setChoice == 1) {
             set = set1;
         }else{
             set = set2;
+        }
+        if(imageChoice == 0) {
+            imageSet = "normal";
+        }else{
+            imageSet = "doge";
         }
         setLength = set.length;
         passLength = length;
@@ -34,25 +48,54 @@ public class scrambler {
         for(int i = 0; i < length; i++) {
             num = Math.abs(rand.nextInt());
             index = (num % set.length);
+            arr[i] = index;
             c = set[index];
             str = str + c;
         }
         str = ensureStrength(str);
-        return str;
+        passObj pass = new passObj(str, arr);
+        return pass;
+    }
+    public static void generateImage(int[] arr, View view, Context context){
+        String viewBase = "imageView";
+        String str;
+        String str2;
+        int imageID;
+        Drawable d;
+        ImageView viewImage = null;
+        for(int i = 0; i < arr.length; i++){
+            str =  viewBase + i;
+            str2 = imageSet + arr[i];
+            imageID = context.getResources().getIdentifier(str2, "drawable", context.getPackageName());
+            viewImage = (ImageView)view.findViewById(view.getResources().getIdentifier(str, "id", "com.example.pictosec"));
+            viewImage.setImageResource(imageID);
+        }
     }
     private static String ensureStrength(String string) {
         String str = string;
+        int special;
         char[] specialC = {'!', '@', '#', '$', '%', '&'};
         Random rand = new Random();
         int num;
         int num2;
         char c;
-        if(string.matches("[0-9]+")) {
+        boolean digitTest = false;
+        boolean specialTest = false;
+        for(int i = 0; i < str.length(); i++){
+            special = str.charAt(i);
+            if(Character.isDigit(str.charAt(i))){
+                digitTest = true;
+            }
+            if(special == 33 || special == 35 || special == 36 || special == 37 || special == 38 || special == 64){
+                specialTest = true;
+            }
+        }
+        if(digitTest == false) {
             num = rand.nextInt(9);
             c = (char) ('0' + num);
             str = str.substring(0, string.length()-2) + c;
         }
-        if(string.matches("!|@|#|$|%|&")) {
+        if(specialTest == false) {
             num = (string.length() - 1)/2;
             num2 = rand.nextInt(6);
             c = specialC[num2];
