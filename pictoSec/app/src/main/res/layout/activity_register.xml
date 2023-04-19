@@ -14,11 +14,10 @@
         android:layout_marginStart="110dp"
         android:layout_marginTop="240dp"
         android:ems="10"
+        android:hint="Username"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:hint="User ID"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/inputPassword"
@@ -37,23 +36,22 @@
         android:id="@+id/confirmPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="110dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginStart="108dp"
+        android:layout_marginTop="120dp"
         android:ems="10"
+        android:hint="Confirm Password"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputUserID"
-        android:hint="Password"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/inputUserID" />
 
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/registerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="110dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginStart="108dp"
+        android:layout_marginTop="132dp"
         android:width="200dp"
-        android:text="Login"
+        android:text="Register"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/inputPassword" />
 </androidx.constraintlayout.widget.ConstraintLayout>

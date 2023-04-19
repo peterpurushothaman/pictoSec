@@ -2,7 +2,6 @@ package com.example.pictosec;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,7 +21,7 @@ public class Login extends AppCompatActivity {
 
         userIDPrompt = (EditText) findViewById(R.id.inputUserID);
         passwordPrompt = (EditText) findViewById(R.id.inputPassword);
-        loginButton = (Button) findViewById(R.id.loginButton);
+        loginButton = (Button) findViewById(R.id.registerButton);
 
          loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

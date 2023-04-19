@@ -2,8 +2,6 @@ package com.example.pictosec;
 
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
@@ -11,42 +9,53 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.pictosec.databinding.ActivityRegisterBinding;
+
+import java.lang.String;
 
 public class register extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityRegisterBinding binding;
 
-    private Button registerButton;
+    private Button register;
 
     private databaseManagement db;
+
+    private EditText userIDPrompt;
+
+    private EditText passwordPrompt;
+
+    private EditText passwordConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         db = new databaseManagement();
+        userIDPrompt = (EditText) findViewById(R.id.inputUserID);
+        passwordPrompt = (EditText) findViewById(R.id.inputPassword);
+        passwordConfirm = (EditText) findViewById(R.id.confirmPassword);
+        register = (Button) findViewById(R.id.registerButton);
 
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String userID = userIDPrompt.getText().toString();
                 String password = passwordPrompt.getText().toString();
+                String passwordC = passwordConfirm.getText().toString();
 
-                if(userID.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(Login.this, "Make sure no fields are empty!", Toast.LENGTH_SHORT).show();
-                } else {
-                    if(userID.equals("testUser") && password.equals("12345")) {
-                        finish();
-                    } else {
-                        Toast.makeText(Login.this, "Invalid Credentials!", Toast.LENGTH_SHORT).show();
-                    }
+                if(userID.isEmpty() || password.isEmpty() || passwordC.isEmpty()) {
+                    Toast.makeText(register.this, "Make sure no fields are empty!", Toast.LENGTH_SHORT).show();
+                }else if(db.users.contains(userID)) {
+                    Toast.makeText(register.this, "Username is taken!", Toast.LENGTH_SHORT).show();
+                }else if(password.compareTo(passwordC) != 0) {
+                        Toast.makeText(register.this, "Make sure passwords match!", Toast.LENGTH_SHORT).show();
+                }else{
+                    databaseManagement.register(userID, password);
+                    finish();
                 }
             }
         });

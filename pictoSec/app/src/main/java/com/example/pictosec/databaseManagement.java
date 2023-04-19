@@ -21,6 +21,8 @@ public class databaseManagement {
         private static int i;
         public static ArrayList<String> passwords;
 
+        public static ArrayList<String> users;
+
         public databaseManagement(){
                 i = 0;
                 db = FirebaseFirestore.getInstance();
@@ -43,17 +45,13 @@ public class databaseManagement {
                 while(!task.isComplete());
                 DocumentSnapshot document = task.getResult();
                 passwords = (ArrayList<String>) document.get("passwords");
+                users = (ArrayList<String>) document.get("users");
         }
-        public static int register(String username, String password){
-                if(!list.contains(username)) {
-                        List<String> passwords = new ArrayList<>();
-                        Map<String, Object> data = new HashMap<>();
-                        data.put("password", password);
-                        db.collection("users").document(username).set(data);
-                        return 1;
-                }else{
-                        return 0;
-                }
+        public static void register(String username, String password){
+                String pass =  password;
+                Map<String, Object> data = new HashMap<>();
+                data.put("password", pass);
+                db.collection("users").document(username).set(data);
         }
         public static int addPassword(String username, String str){
                 db.collection("userPasswords")
