@@ -25,6 +25,7 @@ public class register extends AppCompatActivity {
 
     private Button register;
 
+    private Button rLogin;
     private databaseManagement db;
 
     private EditText userIDPrompt;
@@ -43,6 +44,7 @@ public class register extends AppCompatActivity {
         passwordPrompt = (EditText) findViewById(R.id.inputPass);
         passwordConfirm = (EditText) findViewById(R.id.inputPass2);
         register = (Button) findViewById(R.id.registerB);
+        rLogin = (Button) findViewById(R.id.back);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +62,12 @@ public class register extends AppCompatActivity {
                     databaseManagement.register(userID, password);
                     finish();
                 }
+            }
+        });
+        rLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

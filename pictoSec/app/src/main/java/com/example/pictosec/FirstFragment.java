@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,11 +18,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
-    TextView showPasswordView;
-    databaseManagement db;
+    private TextView showPasswordView;
+    private databaseManagement db;
+    private passObj pass;
 
-    passObj pass;
-    scrambler scramble;
+    private String cont;
+    private scrambler scramble;
 
     @Override
     public View onCreateView(
@@ -36,7 +39,7 @@ public class FirstFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        EditText context = (EditText) view.findViewById(R.id.context);
         binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,12 +51,25 @@ public class FirstFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 int[] arr;
-                binding.textview1.setText("");
-                    pass = scramble.generatePassword(1, 0,9);
+                cont = context.getText().toString();
+                if(cont.isEmpty()) {
+                    Toast.makeText(getActivity(), "Make sure you add a context!", Toast.LENGTH_SHORT).show();
+                } else {
+                    binding.textview1.setText("");
+                    pass = scramble.generatePassword(1, 0, 9);
                     arr = pass.imageSet;
-                    db.addPassword("ppurushothaman1", pass.password);
+                    db.addPassword(users.username, pass.password, cont);
                     scrambler.generateImage(arr, FirstFragment.this.getView(), FirstFragment.this.getContext());
                     binding.textview1.append(pass.password);
+                    context.getText().clear();
+                }
+            }
+        });
+        view.findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().finish();
+                System.exit(0);
             }
         });
     }

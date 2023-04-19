@@ -45,13 +45,13 @@ public class SecondFragment extends Fragment {
         view.findViewById(R.id.retrieve).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String foo;
+                String[] arr = new String[2];
                 if(db.passwords.size() == 0){
                     Toast.makeText(getActivity(), "No passwords to display!", Toast.LENGTH_SHORT).show();
                 }else {
                     for (int i = 0; i < db.passwords.size(); i++) {
-                        foo = db.retrievePassword("ppurushothaman1");
-                        String text = "TestPassword: " + foo + "\n";
+                        arr = db.retrievePassword(users.username);
+                        String text = arr[0] + ": " + arr[1] + "\n";
                         binding.textview.append(text);
                     }
                     Timer timer = new Timer();

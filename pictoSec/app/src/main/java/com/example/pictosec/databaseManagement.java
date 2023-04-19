@@ -21,6 +21,8 @@ public class databaseManagement {
         private static int i;
         public static ArrayList<String> passwords;
 
+        public static ArrayList<String> contexts;
+
         public databaseManagement() {
                 i = 0;
                 db = FirebaseFirestore.getInstance();
@@ -43,6 +45,11 @@ public class databaseManagement {
                 while (!task.isComplete()) ;
                 DocumentSnapshot document = task.getResult();
                 passwords = (ArrayList<String>) document.get("passwords");
+                Task<DocumentSnapshot> task2 = db.collection("userPasswords")
+                        .document("ppurushothaman1").get();
+                while (!task2.isComplete()) ;
+                DocumentSnapshot document2 = task.getResult();
+                contexts = (ArrayList<String>) document2.get("pContext");
         }
 
         public static void register(String username, String password) {
@@ -60,9 +67,11 @@ public class databaseManagement {
                 db.collection("userPasswords").document(username).set(data2);
         }
 
-        public static int addPassword(String username, String str) {
+        public static int addPassword(String username, String str, String context) {
                 db.collection("userPasswords")
-                        .document("ppurushothaman1").update("passwords", FieldValue.arrayUnion(str));
+                        .document(users.username).update("passwords", FieldValue.arrayUnion(str));
+                db.collection("userPasswords")
+                        .document(users.username).update("pContext", FieldValue.arrayUnion(context));
                 return 1;
         }
 
@@ -94,16 +103,21 @@ public class databaseManagement {
                 return false;
         }
 
-        public static String retrievePassword(String username) {
+        public static String[] retrievePassword(String username) {
                 if(passwords.size() == 0){
                         return null;
                 }
-                String str;
+                String pass;
+                String context;
+                String[] foo = new String[2];
                 if(i == passwords.size()){
                         i = 0;
                 }
-                str = passwords.get(i);
+                context = contexts.get(i);
+                pass = passwords.get(i);
+                foo[0] = context;
+                foo[1] = pass;
                 i++;
-                return str;
+                return foo;
         }
 }

@@ -25,7 +25,6 @@ public class Login extends AppCompatActivity {
         passwordPrompt = (EditText) findViewById(R.id.inputPassword);
         loginButton = (Button) findViewById(R.id.loginButton);
         rButton = (Button) findViewById(R.id.registerButton);
-
          loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,6 +35,7 @@ public class Login extends AppCompatActivity {
                     Toast.makeText(Login.this, "Make sure no fields are empty!", Toast.LENGTH_SHORT).show();
                 } else {
                     if(databaseManagement.getLogin(userID, password)) {
+                        users.username = userID;
                         finish();
                     } else {
                         Toast.makeText(Login.this, "Invalid Credentials!", Toast.LENGTH_SHORT).show();
