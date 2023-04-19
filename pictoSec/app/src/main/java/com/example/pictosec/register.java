@@ -12,6 +12,9 @@ import android.widget.Toast;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import com.example.pictosec.databinding.ActivityRegisterBinding;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.String;
 
@@ -30,15 +33,16 @@ public class register extends AppCompatActivity {
 
     private EditText passwordConfirm;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         db = new databaseManagement();
-        userIDPrompt = (EditText) findViewById(R.id.inputUserID);
-        passwordPrompt = (EditText) findViewById(R.id.inputPassword);
-        passwordConfirm = (EditText) findViewById(R.id.confirmPassword);
-        register = (Button) findViewById(R.id.registerButton);
+        userIDPrompt = (EditText) findViewById(R.id.inputUser);
+        passwordPrompt = (EditText) findViewById(R.id.inputPass);
+        passwordConfirm = (EditText) findViewById(R.id.inputPass2);
+        register = (Button) findViewById(R.id.registerB);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,13 +50,12 @@ public class register extends AppCompatActivity {
                 String userID = userIDPrompt.getText().toString();
                 String password = passwordPrompt.getText().toString();
                 String passwordC = passwordConfirm.getText().toString();
-
                 if(userID.isEmpty() || password.isEmpty() || passwordC.isEmpty()) {
                     Toast.makeText(register.this, "Make sure no fields are empty!", Toast.LENGTH_SHORT).show();
-                }else if(db.users.contains(userID)) {
-                    Toast.makeText(register.this, "Username is taken!", Toast.LENGTH_SHORT).show();
                 }else if(password.compareTo(passwordC) != 0) {
-                        Toast.makeText(register.this, "Make sure passwords match!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(register.this, "Make sure passwords match!", Toast.LENGTH_SHORT).show();
+                }else if(databaseManagement.getUserQuery(userID)) {
+                    Toast.makeText(register.this, "Username is taken!", Toast.LENGTH_SHORT).show();
                 }else{
                     databaseManagement.register(userID, password);
                     finish();

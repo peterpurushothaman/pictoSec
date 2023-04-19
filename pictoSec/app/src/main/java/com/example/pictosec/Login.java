@@ -2,6 +2,7 @@ package com.example.pictosec;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ public class Login extends AppCompatActivity {
     private EditText userIDPrompt;
     private EditText passwordPrompt;
     private Button loginButton;
+    private Button rButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +23,8 @@ public class Login extends AppCompatActivity {
 
         userIDPrompt = (EditText) findViewById(R.id.inputUserID);
         passwordPrompt = (EditText) findViewById(R.id.inputPassword);
-        loginButton = (Button) findViewById(R.id.registerButton);
+        loginButton = (Button) findViewById(R.id.loginButton);
+        rButton = (Button) findViewById(R.id.registerButton);
 
          loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,7 +35,7 @@ public class Login extends AppCompatActivity {
                 if(userID.isEmpty() || password.isEmpty()) {
                     Toast.makeText(Login.this, "Make sure no fields are empty!", Toast.LENGTH_SHORT).show();
                 } else {
-                    if(userID.equals("testUser") && password.equals("12345")) {
+                    if(databaseManagement.getLogin(userID, password)) {
                         finish();
                     } else {
                         Toast.makeText(Login.this, "Invalid Credentials!", Toast.LENGTH_SHORT).show();
@@ -40,6 +43,13 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
+        rButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Login.this, register.class));
+            }
+        });
+
     }
 
     @Override
