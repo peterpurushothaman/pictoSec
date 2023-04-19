@@ -33,7 +33,6 @@ public class register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         db = new databaseManagement();
 
-
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
