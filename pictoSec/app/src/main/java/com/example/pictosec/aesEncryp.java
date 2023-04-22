@@ -15,7 +15,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class aesEncryp {
-    private static final String key = "super_special_awesome_pictoSec_secretKey_1283";
+    private static final String key = "super&special9awesome{pictoSec-secretKey_12@3";
     private static final String SALT = "7G$hx%0H!93pA&zD5q";
     private static final byte[] iv = { 67, 13, 75, 21, 4, 0, 84, 33, 1, 120, 7, 15, 98, 77, 45, 20};
 
