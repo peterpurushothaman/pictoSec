@@ -9,6 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
 public class Login extends AppCompatActivity {
 
     private EditText userIDPrompt;
@@ -34,11 +38,19 @@ public class Login extends AppCompatActivity {
                 if(userID.isEmpty() || password.isEmpty()) {
                     Toast.makeText(Login.this, "Make sure no fields are empty!", Toast.LENGTH_SHORT).show();
                 } else {
-                    if(databaseManagement.getLogin(userID, password)) {
-                        users.username = userID;
-                        finish();
-                    } else {
-                        Toast.makeText(Login.this, "Invalid Credentials!", Toast.LENGTH_SHORT).show();
+                    try {
+                        if(databaseManagement.getLogin(userID, password)) {
+                            users.username = userID;
+                            finish();
+                        } else {
+                            Toast.makeText(Login.this, "Invalid Credentials!", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    } catch (NoSuchAlgorithmException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidKeySpecException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }

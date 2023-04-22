@@ -20,6 +20,8 @@ public class SecondFragment extends Fragment {
     private FragmentSecondBinding binding;
     databaseManagement db;
 
+    private Timer timer;
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -38,6 +40,7 @@ public class SecondFragment extends Fragment {
         binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                timer.cancel();
                 NavHostFragment.findNavController(SecondFragment.this)
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
@@ -46,15 +49,17 @@ public class SecondFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String[] arr = new String[2];
+                String decPass;
                 if(db.passwords.size() == 0){
                     Toast.makeText(getActivity(), "No passwords to display!", Toast.LENGTH_SHORT).show();
                 }else {
                     for (int i = 0; i < db.passwords.size(); i++) {
                         arr = db.retrievePassword(users.username);
-                        String text = arr[0] + ": " + arr[1] + "\n";
+                        decPass = aesEncryp.decrypt(arr[1]);
+                        String text = arr[0] + ": " + decPass + "\n";
                         binding.textview.append(text);
                     }
-                    Timer timer = new Timer();
+                    timer = new Timer();
                     timer.schedule(new TimerTask() {
                         @Override
                         public void run() {

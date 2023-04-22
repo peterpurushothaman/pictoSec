@@ -6,11 +6,15 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.*;
 import com.google.firebase.ktx.Firebase;
 
+import java.security.spec.InvalidKeySpecException;
 import java.util.*;
 
 public class databaseManagement {
@@ -52,13 +56,19 @@ public class databaseManagement {
                 contexts = (ArrayList<String>) document2.get("pContext");
         }
 
-        public static void register(String username, String password) {
+        public static void register(String username, String password) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeySpecException {
                 String pass = password;
                 String user = username;
+                SecureRandom random = new SecureRandom();
+                byte[] salt = new byte[64];
+                random.nextBytes(salt);
+                pass = passwordHash.createHash(password, salt);
+                Blob blob = Blob.fromBytes(salt);
                 ArrayList<String> passwords = new ArrayList<>();
                 ArrayList<String> pContext = new ArrayList<>();
                 Map<String, Object> data = new HashMap<>();
                 data.put("password", pass);
+                data.put("salt", blob);
                 db.collection("users").document(username).set(data);
                 Map<String, Object> data2 = new HashMap<>();
                 data2.put("username", user);
@@ -87,14 +97,18 @@ public class databaseManagement {
                 }
         }
 
-        public static boolean getLogin(String username, String password) {
+        public static boolean getLogin(String username, String password) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeySpecException {
                 DocumentReference docRef = db.collection("users").document(username);
                 Task<DocumentSnapshot> task = docRef.get();
                 while (!task.isComplete()) ;
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                        String str = (String) document.get("password");
-                        if (str.compareTo(password) == 0) {
+                        String str2;
+                        String str1 = (String) document.get("password");
+                        Blob blob = document.getBlob("salt");
+                        byte[] arr = blob.toBytes();
+                        str2 = passwordHash.createHash(password, arr);
+                        if (str2.compareTo(str1) == 0) {
                                 return true;
                         }
                 } else {

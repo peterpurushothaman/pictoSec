@@ -51,14 +51,16 @@ public class FirstFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 int[] arr;
+                String encPass;
                 cont = context.getText().toString();
                 if(cont.isEmpty()) {
                     Toast.makeText(getActivity(), "Make sure you add a context!", Toast.LENGTH_SHORT).show();
                 } else {
                     binding.textview1.setText("");
-                    pass = scramble.generatePassword(1, 0, 9);
+                    pass = scramble.generatePassword(1, 1, 9);
+                    encPass = aesEncryp.encrypt(pass.password);
                     arr = pass.imageSet;
-                    db.addPassword(users.username, pass.password, cont);
+                    db.addPassword(users.username, encPass, cont);
                     scrambler.generateImage(arr, FirstFragment.this.getView(), FirstFragment.this.getContext());
                     binding.textview1.append(pass.password);
                     context.getText().clear();
@@ -68,8 +70,7 @@ public class FirstFragment extends Fragment {
         view.findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().finish();
-                System.exit(0);
+                getActivity().finishAffinity();
             }
         });
     }

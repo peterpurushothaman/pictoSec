@@ -34,13 +34,15 @@ public class scrambler {
         int[] arr = new int[length];
         if(setChoice == 1) {
             set = set1;
-        }else{
+        }else if(setChoice == 2){
             set = set2;
         }
-        if(imageChoice == 0) {
+        if(imageChoice == 1) {
             imageSet = "normal";
-        }else{
+        }else if(imageChoice == 0){
             imageSet = "doge";
+        }else{
+            imageSet = "dog";
         }
         setLength = set.length;
         passLength = length;
@@ -65,7 +67,11 @@ public class scrambler {
         ImageView viewImage = null;
         for(int i = 0; i < arr.length; i++){
             str =  viewBase + i;
-            str2 = imageSet + arr[i];
+            if (imageSet == "doge") {
+                str2 = imageSet;
+            }else{
+                str2 = imageSet + arr[i];
+            }
             imageID = context.getResources().getIdentifier(str2, "drawable", context.getPackageName());
             viewImage = (ImageView)view.findViewById(view.getResources().getIdentifier(str, "id", "com.example.pictosec"));
             viewImage.setImageResource(imageID);

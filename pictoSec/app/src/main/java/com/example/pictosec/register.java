@@ -16,7 +16,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.String;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 public class register extends AppCompatActivity {
 
@@ -59,7 +62,15 @@ public class register extends AppCompatActivity {
                 }else if(databaseManagement.getUserQuery(userID)) {
                     Toast.makeText(register.this, "Username is taken!", Toast.LENGTH_SHORT).show();
                 }else{
-                    databaseManagement.register(userID, password);
+                    try {
+                        databaseManagement.register(userID, password);
+                    } catch (UnsupportedEncodingException e) {
+                        throw new RuntimeException(e);
+                    } catch (NoSuchAlgorithmException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidKeySpecException e) {
+                        throw new RuntimeException(e);
+                    }
                     finish();
                 }
             }
