@@ -24,7 +24,6 @@ public class SecondFragment extends Fragment {
     private EditText con;
     private EditText con2;
     private EditText pass;
-    private Timer timer;
 
     @Override
     public View onCreateView(
@@ -41,6 +40,7 @@ public class SecondFragment extends Fragment {
         con = (EditText) view.findViewById(R.id.contextEdit);
         con2 = (EditText) view.findViewById(R.id.newContext);
         pass = (EditText) view.findViewById(R.id.passDelete);
+
         db = new databaseManagement();
 
         view.findViewById(R.id.retrieve).setOnClickListener(new View.OnClickListener() {
@@ -57,13 +57,6 @@ public class SecondFragment extends Fragment {
                         String text = arr[0] + ": " + decPass + "\n";
                         binding.textview.append(text);
                     }
-                    timer = new Timer();
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            binding.textview.setText("");
-                        }
-                    }, 10*1000);
                 }
             }
         });
@@ -80,6 +73,7 @@ public class SecondFragment extends Fragment {
                     db.editContext(str, str2);
                     con.getText().clear();
                     con2.getText().clear();
+                    binding.textview.setText("");
                 }
             }
         });
@@ -91,9 +85,16 @@ public class SecondFragment extends Fragment {
                 if(db.passwords.contains(str)){
                     db.removePassword(str);
                     pass.getText().clear();
+                    binding.textview.setText("");
                 }else{
                     Toast.makeText(getActivity(), "This password does not exist!", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        view.findViewById(R.id.returnB).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.textview.setText("");
             }
         });
     }

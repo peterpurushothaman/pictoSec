@@ -1,5 +1,7 @@
 package com.example.pictosec;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +39,9 @@ public class register extends AppCompatActivity {
 
     private EditText passwordConfirm;
 
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,7 @@ public class register extends AppCompatActivity {
         passwordConfirm = (EditText) findViewById(R.id.inputPass2);
         register = (Button) findViewById(R.id.registerB);
         rLogin = (Button) findViewById(R.id.back);
+        pref = this.getSharedPreferences("SettingsPref", Context.MODE_PRIVATE);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +60,10 @@ public class register extends AppCompatActivity {
                 String userID = userIDPrompt.getText().toString();
                 String password = passwordPrompt.getText().toString();
                 String passwordC = passwordConfirm.getText().toString();
+                editor = pref.edit();
+                editor.putInt("ImageSet", 1);
+                editor.putBoolean("toggle", false);
+                editor.apply();
                 users.username = userID;
                 db = new databaseManagement();
                 if(userID.isEmpty() || password.isEmpty() || passwordC.isEmpty()) {
