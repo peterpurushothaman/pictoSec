@@ -34,13 +34,12 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 String userID = userIDPrompt.getText().toString();
                 String password = passwordPrompt.getText().toString();
-
+                users.username = userID;
                 if(userID.isEmpty() || password.isEmpty()) {
                     Toast.makeText(Login.this, "Make sure no fields are empty!", Toast.LENGTH_SHORT).show();
                 } else {
                     try {
                         if(databaseManagement.getLogin(userID, password)) {
-                            users.username = userID;
                             finish();
                         } else {
                             Toast.makeText(Login.this, "Invalid Credentials!", Toast.LENGTH_SHORT).show();

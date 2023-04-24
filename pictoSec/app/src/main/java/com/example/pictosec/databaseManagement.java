@@ -23,6 +23,7 @@ public class databaseManagement {
         Task<QuerySnapshot> query;
         private static List<String> list;
         private static int i;
+        public static String username;
         public static ArrayList<String> passwords;
 
         public static ArrayList<String> contexts;
@@ -45,12 +46,12 @@ public class databaseManagement {
                         }
                 });
                 Task<DocumentSnapshot> task = db.collection("userPasswords")
-                        .document("ppurushothaman1").get();
+                        .document(users.username).get();
                 while (!task.isComplete()) ;
                 DocumentSnapshot document = task.getResult();
                 passwords = (ArrayList<String>) document.get("passwords");
                 Task<DocumentSnapshot> task2 = db.collection("userPasswords")
-                        .document("ppurushothaman1").get();
+                        .document(users.username).get();
                 while (!task2.isComplete()) ;
                 DocumentSnapshot document2 = task.getResult();
                 contexts = (ArrayList<String>) document2.get("pContext");
@@ -98,7 +99,8 @@ public class databaseManagement {
         }
 
         public static boolean getLogin(String username, String password) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeySpecException {
-                DocumentReference docRef = db.collection("users").document(username);
+                FirebaseFirestore db1 = FirebaseFirestore.getInstance();
+                DocumentReference docRef = db1.collection("users").document(username);
                 Task<DocumentSnapshot> task = docRef.get();
                 while (!task.isComplete()) ;
                 DocumentSnapshot document = task.getResult();
@@ -115,6 +117,31 @@ public class databaseManagement {
                         return false;
                 }
                 return false;
+        }
+        public static void editContext(String context, String newContext){
+                int index = contexts.indexOf(context);
+                contexts.set(index, newContext);
+                ArrayList<String> pContext = contexts;
+                ArrayList<String> pass = passwords;
+                Map<String, Object> data = new HashMap<>();
+                data.put("pContext", pContext);
+                data.put("passwords", pass);
+                db.collection("userPasswords").document(users.username).set(data);
+        }
+        public static void removePassword(String password){
+                int index = passwords.indexOf(password);
+                ArrayList<String> passW;
+                ArrayList<String> pContext;
+                passwords.remove(password);
+                String context = contexts.get(index);
+                contexts.remove(context);
+                pContext = contexts;
+                passW = passwords;
+                Map<String, Object> data = new HashMap<>();
+                data.put("pContext", pContext);
+                data.put("passwords", passW);
+                db.collection("userPasswords").document(users.username).set(data);
+                i--;
         }
 
         public static String[] retrievePassword(String username) {

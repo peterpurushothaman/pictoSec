@@ -42,7 +42,6 @@ public class register extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        db = new databaseManagement();
         userIDPrompt = (EditText) findViewById(R.id.inputUser);
         passwordPrompt = (EditText) findViewById(R.id.inputPass);
         passwordConfirm = (EditText) findViewById(R.id.inputPass2);
@@ -55,6 +54,8 @@ public class register extends AppCompatActivity {
                 String userID = userIDPrompt.getText().toString();
                 String password = passwordPrompt.getText().toString();
                 String passwordC = passwordConfirm.getText().toString();
+                users.username = userID;
+                db = new databaseManagement();
                 if(userID.isEmpty() || password.isEmpty() || passwordC.isEmpty()) {
                     Toast.makeText(register.this, "Make sure no fields are empty!", Toast.LENGTH_SHORT).show();
                 }else if(password.compareTo(passwordC) != 0) {

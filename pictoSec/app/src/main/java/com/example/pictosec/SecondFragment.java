@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,7 +21,9 @@ public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
     databaseManagement db;
-
+    private EditText con;
+    private EditText con2;
+    private EditText pass;
     private Timer timer;
 
     @Override
@@ -28,26 +32,21 @@ public class SecondFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         binding = FragmentSecondBinding.inflate(inflater, container, false);
-        db = new databaseManagement();
         return binding.getRoot();
 
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        con = (EditText) view.findViewById(R.id.contextEdit);
+        con2 = (EditText) view.findViewById(R.id.newContext);
+        pass = (EditText) view.findViewById(R.id.passDelete);
+        db = new databaseManagement();
 
-        binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                timer.cancel();
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
-            }
-        });
         view.findViewById(R.id.retrieve).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] arr = new String[2];
+                String[] arr;
                 String decPass;
                 if(db.passwords.size() == 0){
                     Toast.makeText(getActivity(), "No passwords to display!", Toast.LENGTH_SHORT).show();
@@ -68,8 +67,36 @@ public class SecondFragment extends Fragment {
                 }
             }
         });
+        view.findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String str = con.getText().toString();
+                String str2 = con2.getText().toString();
+                if(!db.contexts.contains(str)){
+                    Toast.makeText(getActivity(), "This context does not exist!", Toast.LENGTH_SHORT).show();
+                }else if(str2.isEmpty()){
+                    Toast.makeText(getActivity(), "Must Provide a new context!", Toast.LENGTH_SHORT).show();
+                }else{
+                    db.editContext(str, str2);
+                    con.getText().clear();
+                    con2.getText().clear();
+                }
+            }
+        });
+        view.findViewById(R.id.passD).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String str = pass.getText().toString();
+                str = aesEncryp.encrypt(str);
+                if(db.passwords.contains(str)){
+                    db.removePassword(str);
+                    pass.getText().clear();
+                }else{
+                    Toast.makeText(getActivity(), "This password does not exist!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
